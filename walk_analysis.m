@@ -50,7 +50,7 @@ index=1;
 for i = 2 : length(segmentation)
     start_index = segmentation(i-1);
     end_index = segmentation(i);
-    extrema_count = sum(extrema{1}(start_index:end_index))+sum(extrema{2}(start_index:end_index))
+    extrema_count = sum(extrema{1}(start_index:end_index))+sum(extrema{2}(start_index:end_index));
     if(extrema_count ==5)
         start_array(index)=start_index;
         end_array(index)=end_index;
@@ -62,7 +62,7 @@ start_array = start_array(start_array~=0);
 end_array = end_array(end_array~=0);
 
 base_points = zeros(5,length(start_array));
-features = zeros( 10, length(start_array));
+feature_lines = zeros( 3, length(start_array));
 
 for i = 1:length(start_array)
     %1st point
@@ -76,6 +76,20 @@ for i = 1:length(start_array)
         end
     end
 end
+
+for n = 1:length(base_points)
+    index=1;
+    width = base_points(5,n)-base_points(1,n);
+    for i = 2:4
+      feature_lines(index,n) = (base_points(i,n)-base_points(1,n))/width;
+      index=index+1;
+    end
+end
+
+trained_data = svmtrain(feature_lines',[1 1 1]);
+
+%have to add neg false data
+
 
 subplot(2,1,1);
 plot(data)
